@@ -1,7 +1,10 @@
+using System.Net;
 using GameStore.Data.Entities;
 using GameStore.Data.Exceptions;
 using GameStore.Data.Models;
+using GameStore.Data.Services;
 using GameStore.Data.UOW;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Northwind.Orders.WebApi.Controllers;
@@ -10,53 +13,67 @@ namespace Northwind.Orders.WebApi.Controllers;
 [ApiController]
 public sealed class GameController : ControllerBase
 {
-    private readonly IUnitOfWork unitOfWork;
-    public GameController(IUnitOfWork unitOfWork)
+    private readonly IGameService gameService;
+    public GameController(IGameService gameService)
     {
-        this.unitOfWork = unitOfWork;
-    }
-
-    [HttpGet]
-    [Route("/test")]
-    public ActionResult<string> TestAPI()
-    {
-        var a = unitOfWork.Games.GetAll();
-        return Ok(a);
+        this.gameService = gameService;
     }
 
     [HttpPost]
     [Route("/new")]
-    public ActionResult<string> NewGame([FromBody]NewGameModel newGame)
+    public ActionResult NewGame([FromBody]NewGameModel newGame)
     {
         try
         {
-            unitOfWork.Games.Create(new GameEntity(newGame));
-            unitOfWork.Save();
+            gameService.CreateGame(newGame);
             return Ok();
+        }
+        catch (GameAliasExistsException ex)
+        {
+            return Conflict(ex.Message);
         }
         catch (Exception)
         {
-            return StatusCode(500);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 
     [HttpGet]
-    [Route("/games/{gamealias}")]
-    public ActionResult<string> GetGameDescription(string gamealias)
+    [Route("/games/{gameAlias}")]
+    public ActionResult<string> GetGameDescription(string gameAlias)
     {
         try
         {
-            var game = unitOfWork.Games.Get(gamealias);
-            return Ok(game.Description);
+            return Ok(gameService.GetGameDescription(gameAlias));
         }
-        catch (GameNotFoundException)
+        catch (GameNotFoundException ex)
         {
-            return NotFound();
+            return NotFound(ex.Message);
         }
         catch (Exception)
         {
-            return StatusCode(500);
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
+
+    [HttpPost]
+    [Route("/games/update")]
+    public ActionResult<string> UpdateGame([FromBody]UpdateGameModel game)
+    {
+        try
+        {
+            gameService.UpdateGame(game);            
+            return Ok();
+        }
+        catch (GameNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
 }
 

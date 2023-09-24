@@ -1,5 +1,6 @@
 using GameStore.Data.Entities;
 using GameStore.Data.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Data.Repository;
 
@@ -13,6 +14,11 @@ public class GameRepository : IGameRepository
 
     public void Create(GameEntity game)
     {
+        var existingGame = _context.Games.FirstOrDefault(g => g.Alias == game.Alias);
+        if (existingGame is not null)
+        {
+            throw new GameAliasExistsException($"Game with alias {game.Alias} already exists!");
+        }
         _context.Games.Add(game);
     }
 
@@ -23,12 +29,10 @@ public class GameRepository : IGameRepository
 
     public GameEntity Get(string gameAlias)
     {
-        var game = _context.Games.Where(g => g.Alias == gameAlias).FirstOrDefault();
-        if (game is null)
-        {
-            throw new GameNotFoundException($"Game with alias {gameAlias} is not found!");
-        }
-        return game;
+        return _context.Games
+            .AsNoTracking()
+            .FirstOrDefault(g => g.Alias == gameAlias)
+            ?? throw new GameNotFoundException($"Game with alias {gameAlias} is not found!");
     }
 
     public IEnumerable<GameEntity> GetAll()
@@ -38,6 +42,6 @@ public class GameRepository : IGameRepository
 
     public void Update(GameEntity game)
     {
-        throw new NotImplementedException();
+        _context.Games.Update(game);
     }
 }
