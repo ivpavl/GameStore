@@ -23,6 +23,13 @@ public sealed class GameController : ControllerBase
         return Ok(a);
     }
 
-
+    [HttpPost]
+    [Route("/new")]
+    public ActionResult<string> NewGame([FromBody]NewGameModel newGame)
+    {
+        _unitOfWork.Games.Create(new GameEntity(newGame));
+        _unitOfWork.Save();
+        return Ok();
+    }
 }
 
