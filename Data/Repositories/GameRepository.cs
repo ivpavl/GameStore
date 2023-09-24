@@ -1,4 +1,5 @@
 using GameStore.Data.Entities;
+using GameStore.Data.Exceptions;
 
 namespace GameStore.Data.Repository;
 
@@ -22,7 +23,12 @@ public class GameRepository : IGameRepository
 
     public GameEntity Get(string gameAlias)
     {
-        throw new NotImplementedException();
+        var game = _context.Games.Where(g => g.Alias == gameAlias).FirstOrDefault();
+        if (game is null)
+        {
+            throw new GameNotFoundException($"Game with alias {gameAlias} is not found!");
+        }
+        return game;
     }
 
     public IEnumerable<GameEntity> GetAll()
