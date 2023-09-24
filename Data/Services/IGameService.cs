@@ -7,4 +7,5 @@ public interface IGameService
     void CreateGame(NewGameModel newGame);
     string GetGameDescription(string gameAlias);
     void UpdateGame(UpdateGameModel game);
+    void DeleteGame(string gameAlias);
 }

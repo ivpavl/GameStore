@@ -22,9 +22,9 @@ public class GameRepository : IGameRepository
         _context.Games.Add(game);
     }
 
-    public void Delete(int id)
+    public void Delete(GameEntity game)
     {
-        throw new NotImplementedException();
+        _context.Games.Remove(game);
     }
 
     public GameEntity Get(string gameAlias)

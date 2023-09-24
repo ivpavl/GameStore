@@ -2,7 +2,6 @@ using GameStore.Data.Entities;
 using GameStore.Data.Models;
 using GameStore.Data.UOW;
 using GameStore.Data.Utilities;
-using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.Data.Services;
 public class GameService : IGameService
@@ -20,6 +19,11 @@ public class GameService : IGameService
         unitOfWork.Save();
     }
 
+    public void DeleteGame(string gameAlias)
+    {
+        var game = unitOfWork.Games.Get(gameAlias);
+        unitOfWork.Games.Delete(game);
+    }
 
     public string GetGameDescription(string gameAlias)
     {

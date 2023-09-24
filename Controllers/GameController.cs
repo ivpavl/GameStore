@@ -1,10 +1,6 @@
-using System.Net;
-using GameStore.Data.Entities;
 using GameStore.Data.Exceptions;
 using GameStore.Data.Models;
 using GameStore.Data.Services;
-using GameStore.Data.UOW;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Northwind.Orders.WebApi.Controllers;
@@ -19,8 +15,7 @@ public sealed class GameController : ControllerBase
         this.gameService = gameService;
     }
 
-    [HttpPost]
-    [Route("/new")]
+    [HttpPost("new")]
     public ActionResult NewGame([FromBody]NewGameModel newGame)
     {
         try
@@ -38,8 +33,7 @@ public sealed class GameController : ControllerBase
         }
     }
 
-    [HttpGet]
-    [Route("/games/{gameAlias}")]
+    [HttpGet("{gameAlias}")]
     public ActionResult<string> GetGameDescription(string gameAlias)
     {
         try
@@ -56,14 +50,31 @@ public sealed class GameController : ControllerBase
         }
     }
 
-    [HttpPost]
-    [Route("/games/update")]
-    public ActionResult<string> UpdateGame([FromBody]UpdateGameModel game)
+    [HttpPost("update")]
+    public ActionResult UpdateGame([FromBody]UpdateGameModel game)
     {
         try
         {
             gameService.UpdateGame(game);            
             return Ok();
+        }
+        catch (GameNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    [HttpDelete("remove")]
+    public ActionResult RemoveGame(string gameAlias)
+    {
+        try
+        {
+            gameService.DeleteGame(gameAlias);            
+            return NoContent();
         }
         catch (GameNotFoundException ex)
         {
