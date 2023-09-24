@@ -39,7 +39,7 @@ public class GameService : IGameService
         {
             Id = existingOldGame.Id,
             Name = game.NewName ?? existingOldGame.Name,
-            Alias = GameUtilities.GenerateUniqueAlias(game.NewName!) ?? existingOldGame.Alias,
+            Alias = game.NewAlias ?? existingOldGame.Alias,
             Description = game.Description
         };
 
