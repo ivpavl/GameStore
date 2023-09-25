@@ -18,72 +18,28 @@ public sealed class GameController : ControllerBase
     [HttpPost("new")]
     public ActionResult NewGame([FromBody]NewGameModel newGame)
     {
-        try
-        {
-            gameService.CreateGame(newGame);
-            return Ok();
-        }
-        catch (GameAliasExistsException ex)
-        {
-            return Conflict(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        gameService.CreateGame(newGame);
+        return Ok();
     }
 
     [HttpGet("{gameAlias}")]
     public ActionResult<string> GetGameDescription(string gameAlias)
     {
-        try
-        {
-            return Ok(gameService.GetGameDescription(gameAlias));
-        }
-        catch (GameNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        return Ok(gameService.GetGameDescription(gameAlias));
     }
 
     [HttpPost("update")]
     public ActionResult UpdateGame([FromBody]UpdateGameModel game)
     {
-        try
-        {
-            gameService.UpdateGame(game);            
-            return Ok();
-        }
-        catch (GameNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        gameService.UpdateGame(game);            
+        return Ok();
     }
 
     [HttpDelete("remove")]
     public ActionResult RemoveGame(string gameAlias)
     {
-        try
-        {
-            gameService.DeleteGame(gameAlias);            
-            return NoContent();
-        }
-        catch (GameNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        gameService.DeleteGame(gameAlias);            
+        return NoContent();
     }
 
 }

@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddTransient<IGameService, GameService>();
 
+builder.Services.AddTransient<ExceptionMiddleware>();
+
 builder.Services.AddTransient<IGameRepository, GameRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
@@ -32,6 +34,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseMiddleware<ExceptionMiddleware>(); // Add this line
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
