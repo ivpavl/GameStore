@@ -15,9 +15,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<IGameService, GameService>();
+builder.Services.AddTransient<IGenreService, GenreService>();
 
 builder.Services.AddTransient<ExceptionMiddleware>();
 
+builder.Services.AddTransient<IGenreRepository, GenreRepository>();
 builder.Services.AddTransient<IGameRepository, GameRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 

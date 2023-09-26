@@ -37,7 +37,7 @@ public class GameRepository : IGameRepository
 
     public IEnumerable<GameEntity> GetAll()
     {
-        return _context.Games;
+        return _context.Games.ToArray();
     }
 
     public void Update(GameEntity game)

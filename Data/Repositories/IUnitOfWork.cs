@@ -6,5 +6,6 @@ namespace GameStore.Data.UOW;
 public interface IUnitOfWork
 {
     public IGameRepository Games { get; }
+    public IGenreRepository Genres { get; }
     public void Save();
 }

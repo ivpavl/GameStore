@@ -5,18 +5,20 @@ using GameStore.Data.Repository;
 namespace GameStore.Data.UOW;
 public class UnitOfWork : IDisposable, IUnitOfWork
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext Context;
     public IGameRepository Games { get; }
+    public IGenreRepository Genres { get; }
 
-    public UnitOfWork(ApplicationDbContext context, IGameRepository _games)
+    public UnitOfWork(ApplicationDbContext context, IGameRepository games, IGenreRepository genres)
     {
-        _context = context;
-        Games = _games;
+        Context = context;
+        Games = games;
+        Genres = genres;
     }
 
     public void Save()
     {
-        _context.SaveChanges();
+        Context.SaveChanges();
     }
 
     private bool disposed = false;
@@ -27,7 +29,7 @@ public class UnitOfWork : IDisposable, IUnitOfWork
         {
             if (disposing)
             {
-                _context.Dispose();
+                Context.Dispose();
             }
         }
         disposed = true;

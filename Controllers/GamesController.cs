@@ -9,10 +9,10 @@ namespace Northwind.Orders.WebApi.Controllers;
 
 [Route("/games")]
 [ApiController]
-public sealed class GameController : ControllerBase
+public sealed class GamesController : ControllerBase
 {
     private readonly IGameService gameService;
-    public GameController(IGameService gameService)
+    public GamesController(IGameService gameService)
     {
         this.gameService = gameService;
     }

@@ -15,6 +15,5 @@ public class GameEntity
     public string Alias { get; set; } = default!;
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
+    public virtual ICollection<GenreEntity> Genres { get; set; } = default!;
 }
-
-

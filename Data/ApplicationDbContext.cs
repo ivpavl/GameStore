@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 public class ApplicationDbContext : DbContext
 {
     public DbSet<GameEntity> Games { get; set; } = null!;
+    public DbSet<GenreEntity> Genres { get; set; } = null!;
  
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -13,7 +14,11 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<GameEntity>()
-            .HasIndex(u => u.Alias)
+            .HasIndex(x => x.Alias)
+            .IsUnique();
+
+        builder.Entity<GenreEntity>()
+            .HasIndex(x => x.Name)
             .IsUnique();
     }
 }

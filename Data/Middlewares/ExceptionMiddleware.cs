@@ -39,6 +39,10 @@ private static Task HandleExceptionAsync(HttpContext context, Exception ex)
             statusCode = (int)HttpStatusCode.Conflict;
             errorMessage = conflictException.Message;
             break;
+        case GenreAliasExistsException conflictException:
+            statusCode = (int)HttpStatusCode.Conflict;
+            errorMessage = conflictException.Message;
+            break;
         default:
             statusCode = (int)HttpStatusCode.InternalServerError;
             errorMessage = "An error occurred while processing the request.";
