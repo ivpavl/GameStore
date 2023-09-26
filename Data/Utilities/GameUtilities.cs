@@ -5,4 +5,8 @@ public static class GameUtilities
     {
         return gameName.ToLower().Replace(" ", "-");
     }
+    public static string GenerateGameFileName(string gameAlias)
+    {
+        return $"{gameAlias}_{DateTime.Now:ddMMyyyyHHmmss}.txt";
+    }
 }

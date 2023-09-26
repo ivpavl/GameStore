@@ -1,3 +1,4 @@
+using System.Text;
 using GameStore.Data.Entities;
 using GameStore.Data.Models;
 using GameStore.Data.UOW;
@@ -23,6 +24,13 @@ public class GameService : IGameService
     {
         var game = unitOfWork.Games.Get(gameAlias);
         unitOfWork.Games.Delete(game);
+    }
+
+    public byte[] GetGameContentForDownload(string gameAlias)
+    {
+        string textContent = $"Some text content for {gameAlias}.";
+        byte[] bytes = Encoding.UTF8.GetBytes(textContent);
+        return bytes;
     }
 
     public string GetGameDescription(string gameAlias)

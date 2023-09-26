@@ -8,4 +8,5 @@ public interface IGameService
     string GetGameDescription(string gameAlias);
     void UpdateGame(UpdateGameModel game);
     void DeleteGame(string gameAlias);
+    byte[] GetGameContentForDownload(string gameAlias);
 }

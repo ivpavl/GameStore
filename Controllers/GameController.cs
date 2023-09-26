@@ -1,11 +1,11 @@
-using GameStore.Data.Exceptions;
 using GameStore.Data.Models;
 using GameStore.Data.Services;
+using GameStore.Data.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Northwind.Orders.WebApi.Controllers;
 
-[Route("/game")]
+[Route("/games")]
 [ApiController]
 public sealed class GameController : ControllerBase
 {
@@ -26,6 +26,16 @@ public sealed class GameController : ControllerBase
     public ActionResult<string> GetGameDescription(string gameAlias)
     {
         return Ok(gameService.GetGameDescription(gameAlias));
+    }
+
+    [HttpGet("{gameAlias}/download")]
+    public ActionResult DownloadGame(string gameAlias)
+    {
+        string contentType = "text/plain";
+        string fileName = GameUtilities.GenerateGameFileName(gameAlias);
+        var gameContent = gameService.GetGameContentForDownload(gameAlias);
+
+        return File(gameContent, contentType, fileName);
     }
 
     [HttpPost("update")]
