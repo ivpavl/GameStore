@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GameStore.Data.Models;
-public class UpdateGameModel
+namespace GameStore.Data.DTOs;
+public class UpdateGameDTO
 {
     [Required]
     public string OldAlias { get; set; } = default!;

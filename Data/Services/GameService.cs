@@ -1,6 +1,6 @@
 using System.Text;
 using GameStore.Data.Entities;
-using GameStore.Data.Models;
+using GameStore.Data.DTOs;
 using GameStore.Data.UOW;
 using GameStore.Data.Utilities;
 
@@ -14,16 +14,35 @@ public class GameService : IGameService
         this.unitOfWork = unitOfWork;
     }
 
-    public void CreateGame(NewGameModel newGame)
+    public void CreateGame(NewGameDTO newGame)
     {
-        unitOfWork.Games.Create(new GameEntity(newGame));
+        unitOfWork.Games.Create(new GameEntity()
+        {
+            Name = newGame.Name,
+            Description = newGame.Description,
+            Alias = newGame.Alias ?? GameUtilities.GenerateUniqueAlias(newGame.Name)
+        });
         unitOfWork.Save();
     }
 
     public void DeleteGame(string gameAlias)
     {
-        var game = unitOfWork.Games.Get(gameAlias);
+        GameEntity game = unitOfWork.Games.Get(gameAlias);
         unitOfWork.Games.Delete(game);
+    }
+
+    public IEnumerable<GameModel> GetAllGamesInfo()
+    {
+        IEnumerable<GameEntity> allGamesEntities = unitOfWork.Games.GetAll();
+        
+        IEnumerable<GameModel> gameModels = allGamesEntities.Select(gameEntity => new GameModel
+        {
+            Alias = gameEntity.Alias,
+            Name = gameEntity.Name,
+            Description = gameEntity.Description
+        });
+
+        return gameModels;
     }
 
     public byte[] GetGameContentForDownload(string gameAlias)
@@ -35,11 +54,11 @@ public class GameService : IGameService
 
     public string GetGameDescription(string gameAlias)
     {
-        var existingGame = unitOfWork.Games.Get(gameAlias);
+        GameEntity existingGame = unitOfWork.Games.Get(gameAlias);
         return existingGame.Description;
     }
 
-    public void UpdateGame(UpdateGameModel game)
+    public void UpdateGame(UpdateGameDTO game)
     {
         var existingOldGame = unitOfWork.Games.Get(GameUtilities.GenerateUniqueAlias(game.OldName));
 

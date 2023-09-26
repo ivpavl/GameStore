@@ -1,3 +1,5 @@
+using GameStore.Data.DTOs;
+using GameStore.Data.Entities;
 using GameStore.Data.Models;
 using GameStore.Data.Services;
 using GameStore.Data.Utilities;
@@ -15,8 +17,14 @@ public sealed class GameController : ControllerBase
         this.gameService = gameService;
     }
 
+    [HttpGet]
+    public ActionResult<IEnumerable<GameModel>> GetAllGamesInfo()
+    {
+        return Ok(gameService.GetAllGamesInfo());            
+    }
+
     [HttpPost("new")]
-    public ActionResult NewGame([FromBody]NewGameModel newGame)
+    public ActionResult NewGame([FromBody]NewGameDTO newGame)
     {
         gameService.CreateGame(newGame);
         return Ok();
@@ -39,7 +47,7 @@ public sealed class GameController : ControllerBase
     }
 
     [HttpPost("update")]
-    public ActionResult UpdateGame([FromBody]UpdateGameModel game)
+    public ActionResult UpdateGame([FromBody]UpdateGameDTO game)
     {
         gameService.UpdateGame(game);            
         return Ok();

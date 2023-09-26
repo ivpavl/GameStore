@@ -1,17 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-using GameStore.Data.Models;
-using GameStore.Data.Utilities;
-
 namespace GameStore.Data.Entities;
-public class GameEntity
+public class GameModel
 {
-    public GameEntity()
+    public GameModel()
     {
-
     }
 
-    [Key]
-    public int Id { get; set; }
     public string Alias { get; set; } = default!;
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
